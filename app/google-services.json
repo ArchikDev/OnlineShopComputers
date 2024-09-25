@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106828497453",
+    "project_id": "onlineshopcomputers",
+    "storage_bucket": "onlineshopcomputers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106828497453:android:eded7f8136e349388b6ea4",
+        "android_client_info": {
+          "package_name": "com.ar4uk.onlineshopcomputers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAotuA2nlvsuETsRE5MHBbaPGGVYmigRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
