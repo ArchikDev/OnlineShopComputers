@@ -1,5 +1,9 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.ar4uk.onlineshopcomputers.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,11 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ar4uk.onlineshopcomputers.R
 import com.ar4uk.onlineshopcomputers.presentation.components.DefaultButton
+import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
+import com.ar4uk.onlineshopcomputers.presentation.navigation.Screen
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.DarkGrey
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Green
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(navigationState: NavigationState) {
     Column {
         Image(
             modifier = Modifier
@@ -77,7 +83,9 @@ fun OnboardingScreen() {
             Spacer(modifier = Modifier.height(15.dp))
             DefaultButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = {
+                    navigationState.navigateTo(Screen.Home.route)
+                }
             ) {
                 Text(
                     text = "Let's Get Started"

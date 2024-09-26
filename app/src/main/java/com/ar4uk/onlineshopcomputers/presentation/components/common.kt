@@ -26,7 +26,7 @@ fun DefaultButton(
     content: @Composable RowScope.() -> Unit
 ) {
     Button(
-        modifier = Modifier.height(42.dp).then(modifier),
+        modifier = Modifier.height(48.dp).then(modifier),
         onClick = onClick,
         colors = colors,
         enabled = enabled,
