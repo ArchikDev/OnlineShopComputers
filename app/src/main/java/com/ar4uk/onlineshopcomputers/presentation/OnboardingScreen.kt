@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -62,6 +63,7 @@ fun OnboardingScreen() {
                 },
                 fontSize = 25.sp,
                 textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
                 lineHeight = 35.sp
             )
             Spacer(modifier = Modifier.weight(1f))
