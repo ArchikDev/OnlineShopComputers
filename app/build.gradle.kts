@@ -73,5 +73,6 @@ dependencies {
 
     implementation(libs.glide)
     implementation(libs.gson)
-
+    // coil
+    implementation(libs.coil.compose)
 }

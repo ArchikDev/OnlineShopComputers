@@ -1,5 +1,3 @@
-@file:Suppress("UNREACHABLE_CODE")
-
 package com.ar4uk.onlineshopcomputers.presentation
 
 import android.os.Build
