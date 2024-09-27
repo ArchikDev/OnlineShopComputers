@@ -17,24 +17,13 @@ import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OnlineShopScreen(navigationState: NavigationState) {
-    val paddingStatusBar = WindowInsets.systemBars
-        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-        .asPaddingValues()
-
-    Scaffold(
-        topBar = {
-            TopBarHome(
-                navigationState = navigationState
-            )
-        }
-    ) {
-        AppNavGraph(
-            navHostController = navigationState.navHostController,
-            onboardScreenContent = { OnboardingScreen(navigationState) },
-            homeScreenContent = {
+    AppNavGraph(
+        navHostController = navigationState.navHostController,
+        onboardScreenContent = { OnboardingScreen(navigationState) },
+        homeScreenContent = {
 //                    val viewModel: HomeViewModel = hiltViewModel()
-                HomeScreen(navigationState)
-            }
+            HomeScreen(navigationState)
+        }
 //                fullImageScreenContent = {
 //                    val fullImageViewModel: FullImageViewModel = hiltViewModel()
 //
@@ -56,6 +45,6 @@ fun OnlineShopScreen(navigationState: NavigationState) {
 //                        )
 //                    }
 //                },
-        )
-    }
+    )
+
 }

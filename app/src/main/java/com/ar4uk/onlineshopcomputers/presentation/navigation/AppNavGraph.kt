@@ -15,7 +15,7 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.Onboard.route,
+        startDestination = Screen.Home.route,
         enterTransition = {
             EnterTransition.None
         },
