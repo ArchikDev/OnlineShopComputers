@@ -24,6 +24,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
@@ -49,6 +55,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlin.math.log
@@ -56,21 +65,24 @@ import kotlin.math.log
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CarouselSlider(images: List<String>) {
+
+    val isLoading = remember { mutableStateOf(false) }
+    val listImages = remember { mutableStateListOf<ImageRequest?>() }
+
     val ctx = LocalContext.current
 
-    var isLoading by remember { mutableStateOf(true) }
-    var listImages = remember { mutableStateListOf<ImageRequest?>() }
-
-
-    loadImages(
-        context = ctx,
-        imageURLs = images
-    ) { loadedImages ->
-        listImages.addAll(loadedImages)
-        isLoading = false
+    LaunchedEffect(key1 = Unit) {
+        isLoading.value = true
+        loadImages(
+            context = ctx,
+            imageURLs = images
+        ) {
+            isLoading.value = false
+            listImages.addAll(it)
+        }
     }
 
-    if (isLoading) {
+    if (isLoading.value) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,26 +101,50 @@ fun CarouselSlider(images: List<String>) {
         Log.d("deferredImages", listImages.toString())
         Slider(images = listImages)
     }
-
-//    if (isLoading) {
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .clip(RoundedCornerShape(14.dp))
-//                .background(MaterialTheme.colorScheme.secondaryContainer),
-//        ) {
-//            CircularProgressIndicator(
-//                modifier = Modifier
-//                    .heightIn(min = 140.dp)
-//                    .size(50.dp)
-//                    .align(Alignment.Center),
-//                color = MaterialTheme.colorScheme.primary
-//            )
-//        }
-//
-//    }
-
 }
+
+
+//@SuppressLint("CoroutineCreationDuringComposition")
+//@Composable
+//fun CarouselSlider(images: List<String>) {
+//
+//    val viewModel = viewModel<CarouselSliderViewModel>()
+//
+//    val ctx = LocalContext.current
+//
+//    LaunchedEffect(key1 = Unit) {
+//        viewModel.fetchImages(
+//            context = ctx,
+//            imageURLs = images
+//        )
+//    }
+//
+//    val sliderCarouselState = viewModel.sliderCarouselState.collectAsState()
+//
+//
+//    when (val currentState = sliderCarouselState.value) {
+//        is CarouselSliderState.Loading ->  {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .clip(RoundedCornerShape(14.dp))
+//                    .background(MaterialTheme.colorScheme.secondaryContainer),
+//            ) {
+//                CircularProgressIndicator(
+//                    modifier = Modifier
+//                        .heightIn(min = 140.dp)
+//                        .size(50.dp)
+//                        .align(Alignment.Center),
+//                    color = MaterialTheme.colorScheme.primary
+//                )
+//            }
+//        }
+//        is CarouselSliderState.Loaded -> {
+//            Slider(images = currentState.photos)
+//        }
+//        is CarouselSliderState.Error -> {}
+//    }
+//}
 
 @Composable
 fun PageIndicator(
@@ -197,4 +233,50 @@ fun loadImages(
 
         callback(loadedImages)
     }
+}
+
+class CarouselSliderViewModel: ViewModel() {
+    private val _sliderCarouselState = MutableStateFlow<CarouselSliderState>(CarouselSliderState.Loading)
+    val sliderCarouselState = _sliderCarouselState.asStateFlow()
+
+    fun fetchImages(
+        context: Context,
+        imageURLs: List<String>
+    ) {
+        loadImages(
+            context = context,
+            imageURLs = imageURLs
+        ) { loadedImages ->
+            viewModelScope.launch {
+                _sliderCarouselState.emit(CarouselSliderState.Loaded(loadedImages))
+            }
+        }
+    }
+
+
+
+
+
+//    : StateFlow<List<FeedPost>>
+//    val screenState = recommendationsFlow
+//        .filter { it.isNotEmpty() }
+//        .map { NewsFeedScreenState.Posts(posts = it) as NewsFeedScreenState }
+//        .onStart { emit(NewsFeedScreenState.Loading) }
+//        .mergeWith(loadNextDataFlow)
+//
+//
+//
+//
+//    private val _image: MutableLiveData<String> = MutableLiveData("")
+//    val image: LiveData<String> = _image
+//
+//    fun onImageChange(newImage: String) {
+//        _image.value = newImage
+//    }
+}
+
+sealed class CarouselSliderState {
+    data object Loading : CarouselSliderState()
+    data class Loaded(val photos: List<ImageRequest?>) : CarouselSliderState()
+    data object Error : CarouselSliderState()
 }
