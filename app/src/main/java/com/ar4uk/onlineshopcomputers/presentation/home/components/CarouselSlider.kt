@@ -2,6 +2,8 @@ package com.ar4uk.onlineshopcomputers.presentation.home.components
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,12 +40,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
@@ -67,12 +71,13 @@ import kotlin.math.log
 fun CarouselSlider(images: List<String>) {
 
     val isLoading = remember { mutableStateOf(false) }
-    val listImages = remember { mutableStateListOf<ImageRequest?>() }
+    val listImages = remember { mutableStateListOf<Bitmap?>() }
 
     val ctx = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
         isLoading.value = true
+
         loadImages(
             context = ctx,
             imageURLs = images
@@ -85,20 +90,19 @@ fun CarouselSlider(images: List<String>) {
     if (isLoading.value) {
         Box(
             modifier = Modifier
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(14.dp))
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .heightIn(min = 140.dp)
+                .clip(RoundedCornerShape(14.dp)),
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .heightIn(min = 140.dp)
                     .size(50.dp)
                     .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.primary
+                color = Green
             )
         }
     } else {
-        Log.d("deferredImages", listImages.toString())
         Slider(images = listImages)
     }
 }
@@ -171,7 +175,7 @@ fun PageIndicator(
 
 @Composable
 fun Slider(
-    images: List<ImageRequest?>
+    images: List<Bitmap?>
 ) {
     val scope = rememberCoroutineScope()
 
@@ -187,12 +191,11 @@ fun Slider(
         ),
         pageSpacing = 16.dp
     ) { index ->
-        val imageState = rememberAsyncImagePainter(model = images[index]).state
-        imageState.painter?.let {
+        images[index]?.let {
             Image(
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.Crop,
-                painter = it,
+                bitmap = it.asImageBitmap(),
                 contentDescription = null
             )
         }
@@ -209,49 +212,82 @@ fun Slider(
     }
 }
 
-fun loadImages(
+//fun loadImages(
+//    context: Context,
+//    imageURLs: List<String>,
+//    callback: (List<ImageRequest?>) -> Unit
+//) {
+//    CoroutineScope(Dispatchers.IO).launch {
+//        val deferredImages = imageURLs.map { url ->
+//            async {
+//                try {
+//                    ImageRequest
+//                        .Builder(context)
+//                        .data(url)
+//                        .size(Size.ORIGINAL)
+//                        .build()
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                    null
+//                }
+//            }
+//        }
+//        val loadedImages: List<ImageRequest?> = deferredImages.awaitAll()
+//
+//        callback(loadedImages)
+//    }
+//}
+//
+ fun loadImages(
     context: Context,
     imageURLs: List<String>,
-    callback: (List<ImageRequest?>) -> Unit
+    callback: (List<Bitmap?>) -> Unit
 ) {
+
+    val imageLoader = ImageLoader.Builder(context)
+        .build()
+
     CoroutineScope(Dispatchers.IO).launch {
         val deferredImages = imageURLs.map { url ->
             async {
                 try {
-                    ImageRequest
+                    val request = ImageRequest
                         .Builder(context)
                         .data(url)
                         .size(Size.ORIGINAL)
                         .build()
+
+                    val drawable = imageLoader.execute(request).drawable
+                    (drawable as? BitmapDrawable)?.bitmap
                 } catch (e: Exception) {
                     e.printStackTrace()
                     null
                 }
             }
         }
-        val loadedImages: List<ImageRequest?> = deferredImages.awaitAll()
+        val loadedImages: List<Bitmap?> = deferredImages.awaitAll()
 
         callback(loadedImages)
     }
 }
 
-class CarouselSliderViewModel: ViewModel() {
-    private val _sliderCarouselState = MutableStateFlow<CarouselSliderState>(CarouselSliderState.Loading)
-    val sliderCarouselState = _sliderCarouselState.asStateFlow()
-
-    fun fetchImages(
-        context: Context,
-        imageURLs: List<String>
-    ) {
-        loadImages(
-            context = context,
-            imageURLs = imageURLs
-        ) { loadedImages ->
-            viewModelScope.launch {
-                _sliderCarouselState.emit(CarouselSliderState.Loaded(loadedImages))
-            }
-        }
-    }
+//class CarouselSliderViewModel: ViewModel() {
+//    private val _sliderCarouselState = MutableStateFlow<CarouselSliderState>(CarouselSliderState.Loading)
+//    val sliderCarouselState = _sliderCarouselState.asStateFlow()
+//
+//    fun fetchImages(
+//        context: Context,
+//        imageURLs: List<String>
+//    ) {
+//        loadImages(
+//            context = context,
+//            imageURLs = imageURLs
+//        ) { loadedImages ->
+//            viewModelScope.launch {
+//                _sliderCarouselState.emit(CarouselSliderState.Loaded(loadedImages))
+//            }
+//        }
+//    }
 
 
 
@@ -273,7 +309,7 @@ class CarouselSliderViewModel: ViewModel() {
 //    fun onImageChange(newImage: String) {
 //        _image.value = newImage
 //    }
-}
+//}
 
 sealed class CarouselSliderState {
     data object Loading : CarouselSliderState()
