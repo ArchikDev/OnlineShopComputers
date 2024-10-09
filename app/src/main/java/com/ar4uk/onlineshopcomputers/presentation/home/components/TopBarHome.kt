@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ar4uk.onlineshopcomputers.R
-import com.ar4uk.onlineshopcomputers.presentation.helpers.SIDE_PADDING
+import com.ar4uk.onlineshopcomputers.core.Constants.SIDE_PADDING
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Grey
 

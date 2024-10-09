@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,19 +22,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,27 +36,17 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import com.ar4uk.onlineshopcomputers.presentation.helpers.SIDE_PADDING
+import com.ar4uk.onlineshopcomputers.core.Constants.SIDE_PADDING
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Green
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Grey
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -106,49 +88,6 @@ fun CarouselSlider(images: List<String>) {
         Slider(images = listImages)
     }
 }
-
-
-//@SuppressLint("CoroutineCreationDuringComposition")
-//@Composable
-//fun CarouselSlider(images: List<String>) {
-//
-//    val viewModel = viewModel<CarouselSliderViewModel>()
-//
-//    val ctx = LocalContext.current
-//
-//    LaunchedEffect(key1 = Unit) {
-//        viewModel.fetchImages(
-//            context = ctx,
-//            imageURLs = images
-//        )
-//    }
-//
-//    val sliderCarouselState = viewModel.sliderCarouselState.collectAsState()
-//
-//
-//    when (val currentState = sliderCarouselState.value) {
-//        is CarouselSliderState.Loading ->  {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .clip(RoundedCornerShape(14.dp))
-//                    .background(MaterialTheme.colorScheme.secondaryContainer),
-//            ) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier
-//                        .heightIn(min = 140.dp)
-//                        .size(50.dp)
-//                        .align(Alignment.Center),
-//                    color = MaterialTheme.colorScheme.primary
-//                )
-//            }
-//        }
-//        is CarouselSliderState.Loaded -> {
-//            Slider(images = currentState.photos)
-//        }
-//        is CarouselSliderState.Error -> {}
-//    }
-//}
 
 @Composable
 fun PageIndicator(
@@ -212,32 +151,6 @@ fun Slider(
     }
 }
 
-//fun loadImages(
-//    context: Context,
-//    imageURLs: List<String>,
-//    callback: (List<ImageRequest?>) -> Unit
-//) {
-//    CoroutineScope(Dispatchers.IO).launch {
-//        val deferredImages = imageURLs.map { url ->
-//            async {
-//                try {
-//                    ImageRequest
-//                        .Builder(context)
-//                        .data(url)
-//                        .size(Size.ORIGINAL)
-//                        .build()
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                    null
-//                }
-//            }
-//        }
-//        val loadedImages: List<ImageRequest?> = deferredImages.awaitAll()
-//
-//        callback(loadedImages)
-//    }
-//}
-//
  fun loadImages(
     context: Context,
     imageURLs: List<String>,
@@ -269,50 +182,4 @@ fun Slider(
 
         callback(loadedImages)
     }
-}
-
-//class CarouselSliderViewModel: ViewModel() {
-//    private val _sliderCarouselState = MutableStateFlow<CarouselSliderState>(CarouselSliderState.Loading)
-//    val sliderCarouselState = _sliderCarouselState.asStateFlow()
-//
-//    fun fetchImages(
-//        context: Context,
-//        imageURLs: List<String>
-//    ) {
-//        loadImages(
-//            context = context,
-//            imageURLs = imageURLs
-//        ) { loadedImages ->
-//            viewModelScope.launch {
-//                _sliderCarouselState.emit(CarouselSliderState.Loaded(loadedImages))
-//            }
-//        }
-//    }
-
-
-
-
-
-//    : StateFlow<List<FeedPost>>
-//    val screenState = recommendationsFlow
-//        .filter { it.isNotEmpty() }
-//        .map { NewsFeedScreenState.Posts(posts = it) as NewsFeedScreenState }
-//        .onStart { emit(NewsFeedScreenState.Loading) }
-//        .mergeWith(loadNextDataFlow)
-//
-//
-//
-//
-//    private val _image: MutableLiveData<String> = MutableLiveData("")
-//    val image: LiveData<String> = _image
-//
-//    fun onImageChange(newImage: String) {
-//        _image.value = newImage
-//    }
-//}
-
-sealed class CarouselSliderState {
-    data object Loading : CarouselSliderState()
-    data class Loaded(val photos: List<ImageRequest?>) : CarouselSliderState()
-    data object Error : CarouselSliderState()
 }
