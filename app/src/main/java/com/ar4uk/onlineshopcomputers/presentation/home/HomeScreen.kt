@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +23,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,9 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ar4uk.onlineshopcomputers.core.Constants.SIDE_PADDING
+import com.ar4uk.onlineshopcomputers.presentation.components.DefaultButton
 import com.ar4uk.onlineshopcomputers.presentation.home.components.CarouselSlider
 import com.ar4uk.onlineshopcomputers.presentation.home.components.TopBarHome
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
+import com.ar4uk.onlineshopcomputers.presentation.navigation.Screen
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Green
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -67,6 +72,19 @@ fun HomeScreen(
                     .fillMaxSize()
             ) {
                 CarouselSlider(images)
+                Spacer(modifier = Modifier.height(24.dp))
+                DefaultButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = SIDE_PADDING, end = SIDE_PADDING),
+                    onClick = {
+                        navigationState.navigateTo(Screen.Select.route)
+                    }
+                ) {
+                    Text(
+                        text = "open"
+                    )
+                }
             }
         },
         bottomBar = {

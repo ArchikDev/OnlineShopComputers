@@ -11,7 +11,8 @@ import androidx.navigation.compose.composable
 fun AppNavGraph(
     navHostController: NavHostController,
     onboardScreenContent: @Composable () -> Unit,
-    homeScreenContent: @Composable () -> Unit
+    homeScreenContent: @Composable () -> Unit,
+    selectScreenContent: @Composable () -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -34,6 +35,9 @@ fun AppNavGraph(
         }
         composable(Screen.Home.route) {
             homeScreenContent()
+        }
+        composable(Screen.Select.route) {
+            selectScreenContent()
         }
     }
 }

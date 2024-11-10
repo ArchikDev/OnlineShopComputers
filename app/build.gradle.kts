@@ -1,3 +1,6 @@
+import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,11 +8,13 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
     namespace = "com.ar4uk.onlineshopcomputers"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.ar4uk.onlineshopcomputers"
@@ -34,7 +39,19 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
+
 }
+
+//androidComponents {
+//    onVariants(selector().all()) { variant ->
+//        afterEvaluate {
+//            val capName = variant.name.capitalized()
+//            tasks.getByName<KotlinCompile>("ksp${capName}Kotlin") {
+//                setSource(tasks.getByName("generate${capName}Proto").outputs)
+//            }
+//        }
+//    }
+//}
 
 dependencies {
 
@@ -49,6 +66,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

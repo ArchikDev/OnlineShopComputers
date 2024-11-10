@@ -13,6 +13,7 @@ import com.ar4uk.onlineshopcomputers.presentation.home.HomeScreen
 import com.ar4uk.onlineshopcomputers.presentation.home.components.TopBarHome
 import com.ar4uk.onlineshopcomputers.presentation.navigation.AppNavGraph
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
+import com.ar4uk.onlineshopcomputers.presentation.select.SelectScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -23,6 +24,10 @@ fun OnlineShopScreen(navigationState: NavigationState) {
         homeScreenContent = {
 //                    val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navigationState)
+        },
+        selectScreenContent = {
+//                    val viewModel: HomeViewModel = hiltViewModel()
+            SelectScreen(navigationState)
         }
 //                fullImageScreenContent = {
 //                    val fullImageViewModel: FullImageViewModel = hiltViewModel()
