@@ -77,9 +77,12 @@ dependencies {
 
     implementation(libs.glide)
     implementation(libs.gson)
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     // hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.google.dagger.hilt.navigation)
     // coil
     implementation(libs.coil.compose)
 }

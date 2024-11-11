@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ar4uk.onlineshopcomputers.presentation.home.HomeScreen
 import com.ar4uk.onlineshopcomputers.presentation.home.components.TopBarHome
 import com.ar4uk.onlineshopcomputers.presentation.navigation.AppNavGraph
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
 import com.ar4uk.onlineshopcomputers.presentation.select.SelectScreen
+import com.ar4uk.onlineshopcomputers.presentation.select.SelectViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -26,8 +28,9 @@ fun OnlineShopScreen(navigationState: NavigationState) {
             HomeScreen(navigationState)
         },
         selectScreenContent = {
-//                    val viewModel: HomeViewModel = hiltViewModel()
-            SelectScreen(navigationState)
+            val viewModel: SelectViewModel = hiltViewModel()
+
+            SelectScreen(navigationState, viewModel)
         }
 //                fullImageScreenContent = {
 //                    val fullImageViewModel: FullImageViewModel = hiltViewModel()

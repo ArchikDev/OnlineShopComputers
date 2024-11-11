@@ -16,3 +16,5 @@ val Grey = Color(0xFF919191)
 val DarkGrey = Color(0xFF616161)
 val LightGrey = Color(0xFFe9e9e9)
 
+val Black100Transparent = Color(0xCC030303)
+
