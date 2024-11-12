@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ar4uk.onlineshopcomputers.presentation.home.HomeScreen
+import com.ar4uk.onlineshopcomputers.presentation.home.HomeViewModel
 import com.ar4uk.onlineshopcomputers.presentation.home.components.TopBarHome
 import com.ar4uk.onlineshopcomputers.presentation.navigation.AppNavGraph
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
@@ -24,8 +25,9 @@ fun OnlineShopScreen(navigationState: NavigationState) {
         navHostController = navigationState.navHostController,
         onboardScreenContent = { OnboardingScreen(navigationState) },
         homeScreenContent = {
-//                    val viewModel: HomeViewModel = hiltViewModel()
-            HomeScreen(navigationState)
+            val viewModel: HomeViewModel = hiltViewModel()
+
+            HomeScreen(navigationState, viewModel)
         },
         selectScreenContent = {
             val viewModel: SelectViewModel = hiltViewModel()

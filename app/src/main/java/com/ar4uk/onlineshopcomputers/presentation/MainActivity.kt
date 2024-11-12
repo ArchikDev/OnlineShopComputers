@@ -10,7 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.ar4uk.onlineshopcomputers.presentation.navigation.rememberNavigationState
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.OnlineShopComputersTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

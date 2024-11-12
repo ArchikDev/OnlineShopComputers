@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -72,15 +73,19 @@ fun SelectScreen(
                             .padding(paddingValues)
                             .fillMaxSize()
                     ) {
-
-
                         LazyColumn(
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .fillMaxWidth()
                         ) {
                             items(value.checkList) { item ->
-                                CheckBoxItem(name = item.name) {}
+                                Spacer(modifier = Modifier.height(10.dp))
+                                CheckBoxItem(name = item.name, isCheck = item.check) { isCheck ->
+                                    viewModel.setCheckApp(
+                                        idApp = item.id,
+                                        isCheck = isCheck
+                                    )
+                                }
                             }
                         }
                     }

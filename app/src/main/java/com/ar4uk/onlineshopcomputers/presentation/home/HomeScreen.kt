@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,13 +45,16 @@ import com.ar4uk.onlineshopcomputers.presentation.home.components.CarouselSlider
 import com.ar4uk.onlineshopcomputers.presentation.home.components.TopBarHome
 import com.ar4uk.onlineshopcomputers.presentation.navigation.NavigationState
 import com.ar4uk.onlineshopcomputers.presentation.navigation.Screen
+import com.ar4uk.onlineshopcomputers.presentation.select.SelectViewModel
+import com.ar4uk.onlineshopcomputers.presentation.select.State
 import com.ar4uk.onlineshopcomputers.presentation.ui.theme.Green
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    navigationState: NavigationState
+    navigationState: NavigationState,
+    viewModel: HomeViewModel
 ) {
     val images = listOf(
         "https://firebasestorage.googleapis.com/v0/b/onlineshopcomputers.appspot.com/o/banner1.png?alt=media&token=758464f0-46e7-426f-8211-5cb7a9f9c82a",
@@ -58,6 +62,9 @@ fun HomeScreen(
         "https://firebasestorage.googleapis.com/v0/b/onlineshopcomputers.appspot.com/o/banner2.png?alt=media&token=42927d77-945a-49b0-8109-de049cc86756",
         "https://firebasestorage.googleapis.com/v0/b/onlineshopcomputers.appspot.com/o/banner2.png?alt=media&token=42927d77-945a-49b0-8109-de049cc86756"
     )
+
+    val checkList = viewModel.checkList.collectAsState(0)
+
     Scaffold(
         topBar = {
             TopBarHome(
@@ -85,6 +92,11 @@ fun HomeScreen(
                         text = "open"
                     )
                 }
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "${checkList.value}",
+                    color = Color.White
+                )
             }
         },
         bottomBar = {
